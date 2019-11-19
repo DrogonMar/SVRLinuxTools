@@ -1,7 +1,7 @@
 # SVRLinuxTools
 A SteamVR overlay for controlling linux stuff like MPD or PulseAudio.
 
-## CLion
+# CLion
 There's already configurations for running with and without VR just look
 for:
  * SVRLinuxTools-VR
@@ -27,5 +27,5 @@ make
 ./SVRLinuxTools
 ```
 
-## Arguments
+# Arguments
 * --novr: Run without the need for SteamVR useful for debugging.
