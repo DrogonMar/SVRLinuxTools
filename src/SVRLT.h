@@ -16,8 +16,8 @@
 #define LicenseType KAboutLicense::Custom
 #define CopyrightStatement ""
 #define OtherText "" //no f'in idea tbh
-#define HomePageAddress "https://github.com/Tuyuji/"
-#define BugAddress "https://github.com/Tuyuji/SVRLinuxTools/issues"
+#define HomePageAddress "https://github.com/DrogonMar/"
+#define BugAddress "https://github.com/DrogonMar/SVRLinuxTools/issues"
 
 static void SetupAboutData() {
     KAboutData aboutData(InternalName, DisplayName, Version, ShortDescription, LicenseType, CopyrightStatement,
