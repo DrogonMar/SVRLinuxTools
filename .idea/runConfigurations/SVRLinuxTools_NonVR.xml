@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SVRLinuxTools-NonVR" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--novr" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SVRLinuxTools" TARGET_NAME="SVRLinuxTools" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="SVRLinuxTools" RUN_TARGET_NAME="SVRLinuxTools">
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>
