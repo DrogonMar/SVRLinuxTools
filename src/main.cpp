@@ -13,6 +13,7 @@
 
 //Local
 #include "SVRLT.h"
+#include "MainOverlay/MainOverlay.h"
 
 int main(int argc, char *argv[]){
     QApplication app(argc, argv);
@@ -33,15 +34,15 @@ int main(int argc, char *argv[]){
     parser.process(app);
 
 
-    auto sampleWindow = new QMainWindow;
+    auto view = new MainOverlay;
 
     bool novr = parser.isSet(novrOption);
 
     if(novr){
-        sampleWindow->show();
+        view->show();
     }else{
         COpenVROverlayController::SharedInstance()->Init();
-        COpenVROverlayController::SharedInstance()->SetWidget( sampleWindow );
+        COpenVROverlayController::SharedInstance()->SetWidget( view );
     }
 
     int result = app.exec();

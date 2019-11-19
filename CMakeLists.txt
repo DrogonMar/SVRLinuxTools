@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 project(SVRLinuxTools)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -42,11 +42,13 @@ find_package(Qt5 COMPONENTS Core Gui Widgets OpenGL REQUIRED)
 
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-arcs -ftest-coverage")
 
-set(DU_sources src/main.cpp)
+set(DU_sources src/main.cpp
+        src/MainOverlay/MainOverlay.cpp)
 
-set(DU_headers src/SVRLT.h)
+set(DU_headers src/SVRLT.h
+        src/MainOverlay/MainOverlay.h)
 
-set(DU_ui )
+set(DU_ui src/MainOverlay/MainOverlay.ui)
 
 qt5_wrap_ui(ui_wrap ${DU_ui})
 qt5_wrap_cpp(moc_sources ${DU_headers})
