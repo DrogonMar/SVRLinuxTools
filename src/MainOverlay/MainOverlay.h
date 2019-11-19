@@ -6,6 +6,11 @@
 #define SVRLINUXTOOLS_MAINOVERLAY_H
 
 #include <QWidget>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QGroupBox>
+
+#include "../GPMDP/GPMDP.h"
 
 namespace Ui{
     class MainOverlay;
@@ -18,10 +23,22 @@ public:
     explicit MainOverlay(QWidget *parent = 0);
     ~MainOverlay();
 
-private slots:
+    void SetMainWidget(QWidget* widget);
 
+private slots:
+    void on_GPMDPMenuButton_clicked();
+    void on_HomeButton_clicked();
 private:
     Ui::MainOverlay *ui;
+
+    //Menu layouts
+    QLabel *nothingLabel;
+    GPMDP *googleMusicWidget;
+
+    //Menu stuff
+    QWidget *currentWidget;
+    QGroupBox *groupBox;
+    QVBoxLayout *layout;
 };
 
 #endif //SVRLINUXTOOLS_MAINOVERLAY_H
