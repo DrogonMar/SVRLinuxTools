@@ -20,8 +20,8 @@ class MainOverlay : public QWidget{
     Q_OBJECT
 
 public:
-    explicit MainOverlay(QWidget *parent = 0);
-    ~MainOverlay();
+    explicit MainOverlay(QWidget *parent = nullptr);
+    ~MainOverlay() override;
 
     void SetMainWidget(QWidget* widget);
 

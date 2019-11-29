@@ -21,6 +21,8 @@
 #include <QtWidgets/QGraphicsScene>
 #include <QtGui/QOffscreenSurface>
 
+#include "../../src/SVRLT.h"
+
 class COpenVROverlayController : public QObject
 {
 	Q_OBJECT

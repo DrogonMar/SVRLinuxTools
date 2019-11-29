@@ -25,6 +25,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
         Widgets # QApplication
         Gui
         OpenGL
+        WebSockets
         )
 
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -38,7 +39,7 @@ feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAG
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5 COMPONENTS Core Gui Widgets OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Widgets OpenGL WebSockets REQUIRED)
 
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-arcs -ftest-coverage")
 
@@ -71,6 +72,7 @@ target_link_libraries(SVRLinuxTools
         Qt5::Gui
         Qt5::Widgets
         Qt5::OpenGL
+        Qt5::WebSockets
         KF5::CoreAddons
         KF5::I18n
         KF5::WidgetsAddons)

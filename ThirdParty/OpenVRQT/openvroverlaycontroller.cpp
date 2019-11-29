@@ -88,7 +88,7 @@ bool COpenVROverlayController::Init()
 {
 	bool bSuccess = true;
 
-    m_strName = "Drogon Utils";
+    m_strName = DisplayName;
 
 	QStringList arguments = qApp->arguments();
 
