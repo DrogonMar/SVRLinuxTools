@@ -45,14 +45,17 @@ set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-arcs -ftest-c
 
 set(DU_sources src/main.cpp
         src/MainOverlay/MainOverlay.cpp
-        src/GPMDP/GPMDP.cpp)
+        src/GPMDP/GPMDP.cpp
+        src/GPMDP/ImageCache.cpp)
 
 set(DU_headers src/SVRLT.h
         src/MainOverlay/MainOverlay.h
-        src/GPMDP/GPMDP.h)
+        src/GPMDP/GPMDP.h
+        src/GPMDP/ImageCache.h)
 
 set(DU_ui src/MainOverlay/MainOverlay.ui
-        src/GPMDP/GPMDP.ui)
+        src/GPMDP/GPMDP.ui
+        )
 
 qt5_wrap_ui(ui_wrap ${DU_ui})
 qt5_wrap_cpp(moc_sources ${DU_headers})
