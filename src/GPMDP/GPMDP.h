@@ -57,7 +57,7 @@ public:
 Q_SIGNALS:
 
 private slots:
-    void networkFinished(class QNetworkReply *reply);
+    void CoverCacheFinished(const QByteArray &Data);
 
     void closed();
     void onConnected();
@@ -70,14 +70,14 @@ private slots:
     void Channel_time(const QString &message);
 
 private:
-
+    void closeEvent(QCloseEvent *event) override;
     void SendRPC(const QString &Namespace, const QString &Method, const QJsonArray &Arguments = *new QJsonArray);
 
     bool expectingCodeNext = false;
     bool fullyRegistered = false;
 
     Ui::GPMDP *ui;
-    class QNetworkAccessManager *network;
+    class ImageCache *coverCache;
     class QSlider *timeSlider;
     class QLabel *image;
     class QLabel *label;

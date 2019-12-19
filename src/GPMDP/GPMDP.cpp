@@ -10,8 +10,10 @@
 #include <QtNetwork/QNetworkReply>
 #include <QSlider>
 #include <QtWidgets/QPushButton>
+#include <QCloseEvent>
 
 #include "src/SVRLT.h"
+#include "ImageCache.h"
 #include "GPMDP.h"
 #include "ui_GPMDP.h"
 
@@ -25,8 +27,8 @@ GPMDP::GPMDP(QWidget *parent) :
 
     ui->setupUi(this);
 
-    network = new QNetworkAccessManager(this);
-    connect(network, &QNetworkAccessManager::finished, this, &GPMDP::networkFinished);
+    coverCache = new ImageCache("Covers");
+    connect(coverCache, &ImageCache::ReceiveFinished, this, &GPMDP::CoverCacheFinished);
 
     //Temp UI
     QPushButton *rewind = new QPushButton;
@@ -64,29 +66,17 @@ GPMDP::GPMDP(QWidget *parent) :
     connect(webSocket, &QWebSocket::connected, this, &GPMDP::onConnected);
     connect(webSocket, &QWebSocket::disconnected, this, &GPMDP::closed);
 
-    webSocket->open(QUrl("ws://localhost:5672"));
+    webSocket->open(QUrl("ws://127.0.0.1:5672"));
 }
 
 GPMDP::~GPMDP(){
+    coverCache->SaveCache();
+    delete coverCache;
     delete ui;
 }
 
-void GPMDP::networkFinished(QNetworkReply *reply) {
-    //Prob would be a good idea to cache the images so we are not downloading images all the time.
-    //cache the images by album id.
-    if(reply->error() != QNetworkReply::NoError){
-        qDebug() << "Error in" << reply->url() << ":" << reply->errorString();
-        return;
-    }
-
-    QByteArray data = reply->readAll();
-    QPixmap pixmap;
-    pixmap.loadFromData(data);
-    image->setPixmap(pixmap);
-}
-
 void GPMDP::closed() {
-
+    qDebug() << "Closed";
 }
 
 void GPMDP::onConnected(){
@@ -214,7 +204,7 @@ void GPMDP::Channel_track(const QString &message) {
 
         if(!CurrentTrack->AlbumArt.isEmpty()){
             qDebug() << "Sending request for image: " << CurrentTrack->AlbumArt;
-            network->get(*new QNetworkRequest(QUrl(CurrentTrack->AlbumArt)));
+            coverCache->getData(CurrentTrack->AlbumArt);
         }
     }
 }
@@ -243,4 +233,15 @@ void GPMDP::SendRPC(const QString &Namespace, const QString &Method, const QJson
     json["arguments"] = Arguments;
 
     webSocket->sendTextMessage((new QJsonDocument(json))->toJson());
+}
+
+void GPMDP::CoverCacheFinished(const QByteArray& data){
+    QPixmap pixmap;
+    pixmap.loadFromData(data);
+    image->setPixmap(pixmap);
+}
+
+void GPMDP::closeEvent(QCloseEvent *event) {
+    coverCache->SaveCache();
+    event->accept();
 }
