@@ -5,35 +5,87 @@
 #ifndef SVRLINUXTOOLS_GPMDP_H
 #define SVRLINUXTOOLS_GPMDP_H
 
+#include <functional>
 #include <QWidget>
+#include <QMap>
 #include <QJsonArray>
+#include <QDebug>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QtCore/QQueue>
+#include "GTrack.h"
+#include "GPlaylist.h"
 
-struct Track{
-public:
-    QString Id;
-    int Index;
-    QString Title;
-    QString Artist;
-    QString Album;
-    QString AlbumArt;
-    QString Duration;
-    int PlayCount;
-
-    QString ToString(){
-        return Artist + ": " + Title;
-    }
-};
+#define ChannelSlot(name) void Channel_##name(const QJsonDocument& doc);
 
 namespace Ui{
     class GPMDP;
 }
 
+using namespace GStructs;
 class GPMDP : public QWidget{
-    Q_OBJECT
+Q_OBJECT
+    Q_PROPERTY(QString apiVersion READ apiVersion NOTIFY apiVersionChanged)
+    Q_PROPERTY(GStructs::GTrack currentTrack READ getCurrentTrack NOTIFY CurrentTrackChanged)
+
+signals:
+    void apiVersionChanged();
+    void CurrentTrackChanged();
 
 public:
     explicit GPMDP(QWidget *parent = nullptr);
     ~GPMDP() override;
+
+    GPMDP(const GPMDP& val){
+
+    }
+
+    GStructs::GTrack getCurrentTrack() const{
+        return m_CurrentTrack;
+    }
+
+    //region Structs & Enums
+
+    struct SAlbum{
+    public:
+        QString Id;
+        QString Name;
+        QString Artist;
+        QString AlbumArt;
+
+        QVariantMap ToMap(){
+            QVariantMap map;
+            map["id"] = Id;
+            map["name"] = Name;
+            map["artist"] = Artist;
+            map["albumArt"] = AlbumArt;
+            return map;
+        }
+    };
+
+    struct SSearchResult{
+    public:
+        QString SearchText;
+        QVariantMap ToMap(){
+            QVariantMap map;
+            map["searchText"] = SearchText;
+            return map;
+        }
+    };
+
+    enum EShuffle{
+        ALL_SHUFFLE,
+        NO_SHUFFLE
+    };
+
+
+    enum ERepeat{
+        LIST_REPEAT,
+        SINGLE_REPEAT,
+        NO_REPEAT
+    };
+
+    //endregion
 
     inline void Rewind(){
         SendRPC("playback", "rewind");
@@ -54,7 +106,16 @@ public:
         SendRPC("playback", "setCurrentTime", args);
     }
 
-Q_SIGNALS:
+    inline void SetVolume(int vol){
+        QJsonArray args;
+        args.append(vol);
+
+        SendRPC("volume", "setVolume", args);
+    }
+
+    inline QString apiVersion() {
+        return m_APIVersion;
+    }
 
 private slots:
     void CoverCacheFinished(const QByteArray &Data);
@@ -63,39 +124,60 @@ private slots:
     void onConnected();
     void onMessage(QString message);
 
-    void Channel_connect(const QString &message);
-    void Channel_track(const QString &message);
-    void Channel_playState(const QString &message);
-    void Channel_lyrics(const QString &message);
-    void Channel_time(const QString &message);
+    ChannelSlot(API_VERSION)
+
+    ChannelSlot(connect)
+    ChannelSlot(track)
+    ChannelSlot(playState)
+    ChannelSlot(lyrics)
+    ChannelSlot(time)
+    ChannelSlot(shuffle)
+    ChannelSlot(repeat)
+    ChannelSlot(queue)
+    ChannelSlot(rating)
+    ChannelSlot(volume)
+    ChannelSlot(playlists)
+    ChannelSlot(searchresults)
 
 private:
+    Ui::GPMDP *ui;
+
     void closeEvent(QCloseEvent *event) override;
-    void SendRPC(const QString &Namespace, const QString &Method, const QJsonArray &Arguments = *new QJsonArray);
+    void SendRPC(const QString &Namespace, const QString &Method, const QJsonArray &Arguments = *new QJsonArray, const std::function<void(QJsonDocument)>& callback = nullptr);
 
     bool expectingCodeNext = false;
     bool fullyRegistered = false;
 
-    Ui::GPMDP *ui;
     class ImageCache *coverCache;
+    class QWebSocket *webSocket;
+
+    QMap<int, std::function<void(QJsonDocument)>> callbacks;
+
+    //Temp UI
     class QSlider *timeSlider;
     class QLabel *image;
     class QLabel *label;
-    class QWebSocket *webSocket;
-
 
     //Player Info Vars
+    QString m_APIVersion;
+    QVector<GPlaylist> m_Playlists;
 
     // PlayState
-    bool IsPlaying;
-    Track *CurrentTrack;
-
-    // Time
-    int SongCurrentTime;
-    int SongTotalTime;
+    GStructs::GTrack m_CurrentTrack;
+    bool m_IsPlaying;
+    bool m_IsLiked;
+    bool m_IsDisliked;
+    EShuffle m_Shuffle;
+    ERepeat m_Repeat;
+    int m_Volume;
+    QVector<GTrack> m_Queue;
+    int m_SongCurrentTime;
+    int m_SongTotalTime;
 
     // Lyrics
-    QString SongLyrics;
+    QString m_SongLyrics;
 };
+
+Q_DECLARE_METATYPE(GPMDP);
 
 #endif //SVRLINUXTOOLS_GPMDP_H

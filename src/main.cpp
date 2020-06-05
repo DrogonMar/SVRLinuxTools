@@ -14,6 +14,7 @@
 //Local
 #include "SVRLT.h"
 #include "MainOverlay/MainOverlay.h"
+#include "Utils.h"
 
 int main(int argc, char *argv[]){
     QApplication app(argc, argv);
@@ -33,6 +34,20 @@ int main(int argc, char *argv[]){
 
     parser.process(app);
 
+    //Check the dirs to make sure they exist
+    qDebug() << Utils::GetHomeDir();
+    qDebug() << Utils::GetSettingsDir();
+    qDebug() << Utils::GetCacheDir();
+
+    if(!QDir(Utils::GetSettingsDir()).exists()){
+        QDir().mkdir(Utils::GetSettingsDir());
+        qDebug() << "Settings dir created";
+    }
+
+    if(!QDir(Utils::GetCacheDir()).exists()){
+        QDir().mkdir(Utils::GetCacheDir());
+        qDebug() << "Cache dir created";
+    }
 
     auto view = new MainOverlay;
 

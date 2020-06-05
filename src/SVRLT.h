@@ -19,6 +19,10 @@
 #define HomePageAddress "https://github.com/DrogonMar/"
 #define BugAddress "https://github.com/DrogonMar/SVRLinuxTools/issues"
 
+#define QPROPGETSET(type, qmlName, cppName) type get##qmlName() const { \
+    return cppName;  \
+    }
+
 static void SetupAboutData() {
     KAboutData aboutData(InternalName, DisplayName, Version, ShortDescription, LicenseType, CopyrightStatement,
                          OtherText, HomePageAddress, BugAddress);
@@ -27,3 +31,4 @@ static void SetupAboutData() {
 
     KAboutData::setApplicationData(aboutData);
 }
+

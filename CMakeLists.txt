@@ -1,10 +1,15 @@
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(SVRLinuxTools)
 
 set(CMAKE_CXX_STANDARD 17)
 
 set(QT_MIN_VERSION "5.3.0")
 set(KF5_MIN_VERSION "5.2.0")
+
+if(CMAKE_BUILD_TYPE MATCHES Release)
+    add_definitions(-DRELEASE=1)
+endif()
+message(${CMAKE_BUILD_TYPE})
 
 find_package(ECM 1.0.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -44,12 +49,16 @@ find_package(Qt5 COMPONENTS Core Gui Widgets OpenGL WebSockets REQUIRED)
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-arcs -ftest-coverage")
 
 set(DU_sources src/main.cpp
+        src/Utils.cpp
         src/MainOverlay/MainOverlay.cpp
         src/GPMDP/GPMDP.cpp
         src/GPMDP/ImageCache.cpp)
 
 set(DU_headers src/SVRLT.h
+        src/Utils.h
         src/MainOverlay/MainOverlay.h
+        src/GPMDP/GPlaylist.h
+        src/GPMDP/GTrack.h
         src/GPMDP/GPMDP.h
         src/GPMDP/ImageCache.h)
 
