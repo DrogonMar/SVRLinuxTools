@@ -12,7 +12,6 @@ for:
  * SVRLinuxTools-NonVR
 
 ## Goals
-- [ ] Make ImageCache a bit smarter, *Currently it will have two version of each image because of how googles url's are*.
 - [ ] Have a volume control that talks to PulseAudio.
 - [ ] Add a mixer to the volume control.
 - [ ] Add simple play/pause for MPD.
